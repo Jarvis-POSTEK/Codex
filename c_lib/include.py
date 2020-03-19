@@ -27,11 +27,9 @@ class Include(object):
         @param name name of the function to be added
         @param output the output of the file passed in for this class to 
             add content
-        @param starting_index the index where the information will be placed
     """  
-    def add_std_include(self, name, output, starting_index):
+    def add_std_include(self, name, output):
         self.std_include_list.append(name)
-        self.generate_output(output, starting_index)
         self.num_of_std_includes += 1
 
     """ 
@@ -48,19 +46,21 @@ class Include(object):
     information within the output of the file so it could be printed later
         @param output the output of the file passed in for this class to 
             add content
-        @param starting_index the index where the information will be placed
     """  
-    def generate_output(self, output, starting_index):
+    def generate_output(self, output):
+        print("generating_output")
         index = 0
         for token in self.std_include_list:
+            
             token = "#include <" + token + ">"
-            output.insert(starting_index + index, token)
+            print("one token" + token)
+            output.append(token)
             index += 1
-        return output
+        
 
 
     """ 
-        Returns teh number of lines this class would be taking up
+        Returns the number of lines this class would be taking up
     """  
     def return_num_lines(self):
         return self.num_of_std_includes + self.num_of_user_def_includes + 1

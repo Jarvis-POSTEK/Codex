@@ -32,7 +32,7 @@ from .import loops_and_conditionals
         being generated, output will be generated sequencially from the first item in tracker 
         to the last 
 """
-class Function(object):
+class Function_definition(object):
     def __init__(self, func_name, return_type):
         self.current_action = None
         self.argument_dict = {}
@@ -49,19 +49,22 @@ class Function(object):
         TODO generate output to many different ways of returning, be consistant
         @return a buffer containing the output of the function with its body 
     """ 
-    def generate_output(self):
+    def generate_output(self, output):
         arguments = self.argument_dict.keys()
-        output = self.return_type + " " + self.func_name + "("
+        temp_out = self.return_type + " " + self.func_name + "("
         if arguments:
             for arg in arguments:
                 output += self.argument_dict.get(arg) + " " + arg + ","     
-            output = output[:-1]
-        output += ")"
-        indent_level = 1
+            temp_out = output[:-1]
+        temp_out += "){"
         self.output.clear()
+        self.output.append(temp_out)
         for token in self.tracker:
-            token.generate_output(self.output, indent_level)
-        return output
+            token.generate_output(self.output, 1)
+        self.output.append("}")
+        print(self.output)
+        for token in self.output:
+            output.append(token)
 
     """ 
         Return just the output generated since function declaration have
@@ -97,22 +100,22 @@ class Function(object):
             add content
         @param starting_index the index where this class can start adding its content
     """ 
-    def return_modified_func(self, output, starting_index, original_body_length):
-        self.generate_output()
-        cur_body_len = len(self.output)
-        iterator = 1
-        while(cur_body_len > 0 and original_body_length > 0):
-            output[iterator + starting_index] = self.output[iterator -1]
-            cur_body_len -= 1
-            original_body_length -= 1
-            iterator += 1
-        while(cur_body_len > 0):
-            output.insert(iterator + starting_index, self.output[iterator -1])
-            cur_body_len -= 1
-            iterator += 1
-        while(original_body_length > 0):
-            del output[iterator + starting_index]
-            original_body_length -= 1
+    # def return_modified_func(self, output, starting_index, original_body_length):
+    #     self.generate_output()
+    #     cur_body_len = len(self.output)
+    #     iterator = 1
+    #     while(cur_body_len > 0 and original_body_length > 0):
+    #         output[iterator + starting_index] = self.output[iterator -1]
+    #         cur_body_len -= 1
+    #         original_body_length -= 1
+    #         iterator += 1
+    #     while(cur_body_len > 0):
+    #         output.insert(iterator + starting_index, self.output[iterator -1])
+    #         cur_body_len -= 1
+    #         iterator += 1
+    #     while(original_body_length > 0):
+    #         del output[iterator + starting_index]
+    #         original_body_length -= 1
 
     """ 
         Returns the number of lines this function class is taking up within
@@ -176,8 +179,7 @@ class Function(object):
         elif name == "variable":
             self.current_action = variable.Variable()
             self.variable_dict.update({value:self.current_action})
-        elif name == "if_else":
-            self.current_action = loops_and_conditionals.If_Else()
-            
+        elif name == "if":
+            self.current_action = loops_and_conditionals.If()
         self.current_action.name = value
         self.tracker.append(self.current_action)

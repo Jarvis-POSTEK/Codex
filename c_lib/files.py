@@ -38,6 +38,12 @@ class File(object):
         self.output = []
         self.tracker = []
         
+    def generate_output(self):
+        del self.output[:]
+        for token in self.tracker:
+            token.generate_output(self.output)
+            self.output.append("")
+
     """ 
         Writes the content of self.output to the file
 
@@ -46,6 +52,7 @@ class File(object):
     writing again
     """  
     def write_output(self):
+        self.generate_output()
         self.writer.write(self.output)
 
     """ 
@@ -56,9 +63,10 @@ class File(object):
         @param include the name fo the library to be included 
     """
     def add_std_include(self, include):
-        self.include.add_std_include(include, self.output, 0)
         if self.include not in self.tracker:
             self.tracker.append(self.include)
+        self.include.add_std_include(include, self.output)
+
         
     """ 
         Add a function to the file
@@ -67,12 +75,12 @@ class File(object):
         @param func_type is the function a definition or a declaration
     """
     def add_function(self, func_name, return_type, func_type):
-        new_func = function.Function(func_name, return_type)
-        self.function_dict.update({new_func.func_name:new_func})
+        
         if(func_type == "definition"):
-            new_func.return_func_definition(self.output, self.return_write_line())
+            new_func = function.Function_definition(func_name, return_type)
         elif(func_type == "declaration"):
             new_func.return_func_declaration(self.output, self.return_write_line())
+        self.function_dict.update({new_func.func_name:new_func})
         self.tracker.append(new_func)
         self.current_function = new_func
 
@@ -96,8 +104,6 @@ class File(object):
             line = line - self.return_write_line(self.current_function)
         original_body_length = self.current_function.return_num_lines()
         self.current_function.add_to_function_body(action_type, name, line, value)
-        self.current_function.return_modified_func(self.output, self.return_write_line(self.current_function), original_body_length)
-        self.write_output()
         
     """ 
         Returns the next line to write to based on what has already been written in

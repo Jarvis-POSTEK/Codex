@@ -54,15 +54,12 @@ class Variable(object):
         while(iterator < indent_level):
             temp_out += "\t"
             iterator += 1
-        if "" not in output:
-            output.insert(0,"")
-        index = output.index("")
         temp_out += self.type + self.name
         if self.value:
             temp_out += " = " + self.value
         else:
             temp_out += ";"
-        output.insert(index, temp_out)
+        output.insert(1,temp_out)
 
     """ 
         Returns how many lines this class is taking up, which for variables

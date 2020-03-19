@@ -62,7 +62,8 @@ class Project(object):
         if os.path.exists(work_path + self.command.get("slash") + "Onedrive") and path.count("disable") == 0:
             work_path = work_path + self.command.get("slash") + "Onedrive"
         for item in path:
-            work_path = work_path + self.command.get("slash") + item
+            if item != "disable":
+                work_path = work_path + self.command.get("slash") + item
         self.work_path = work_path
         self.current_directory = work_path
 

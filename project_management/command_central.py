@@ -98,3 +98,5 @@ class CommandCentral(object):
     """
     def add_to_func_body(self, action_type, name= None, line= None, value= None, func_name= None):
         self.current_file.add_to_function_body(action_type, name, line, value, func_name)
+        self.current_file.write_output()
+

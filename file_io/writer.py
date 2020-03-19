@@ -60,7 +60,7 @@ class Writer(object):
     """
     def write(self, output):
         f = fileinput.input(self.file_path, inplace= True)
-        while(self.file_end < len(output)):
+        while(self.file_end < len(output) or self.file_end == 1):
             self.add_more_lines()
         iterator = 1
         for token in f:

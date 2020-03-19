@@ -26,7 +26,6 @@ class loops_and_conditionals_parent:
         pass
 
     def return_modified_statement(self, output, starting_index, original_body_length):
-        self.body.append(self.generate_output())
         cur_body_len = len(self.body)
         iterator = 1
         while(cur_body_len > 0 and original_body_length > 0):
@@ -59,33 +58,38 @@ class If(loops_and_conditionals_parent):
         super().__init__()
 
     def generate_output(self,output,indent_level):
-        output = ""
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "if("
+        temp_out += "if("
         for token in self.argument_list:
-            output += token + " "
-        output += "){"
+            temp_out += token + " "
+        temp_out += "){"
+        output.append(indent + temp_out)
+        output.append(indent + "}")
         
-        return output
+
 class Elif(loops_and_conditionals_parent):
     def __init__(self):
         super().__init__()
     
-    def generate_output(self,output,indent_level):
-        output = ""
+   def generate_output(self,output,indent_level):
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "else if("
+        temp_out += "else if("
         for token in self.argument_list:
-            output += token + " "
-        output += "){"
+            temp_out += token + " "
+        temp_out += "){"
+        output.append(indent + temp_out)
+        output.append(indent + "}")
         
-        return output
     
     
 
