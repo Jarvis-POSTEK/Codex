@@ -48,17 +48,12 @@ class Include(object):
             add content
     """  
     def generate_output(self, output):
-        print("generating_output")
         index = 0
         for token in self.std_include_list:
-            
             token = "#include <" + token + ">"
-            print("one token" + token)
             output.append(token)
             index += 1
         
-
-
     """ 
         Returns the number of lines this class would be taking up
     """  

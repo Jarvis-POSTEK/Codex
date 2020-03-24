@@ -23,8 +23,6 @@ command_set = {"Darwin": Unix_command, "Windows":windows_prompt}
 
 """ 
     Initialization of the Project class
-    TODO Update current directory to accurately reflect the directory that
-the user is actually in
 
     @param path the current work path of this project
     @param platform the platform of the device
@@ -78,7 +76,6 @@ class Project(object):
     """ 
         Changes the working directory
         @param directory the directory to change into
-        TODO edge case ..
     """
     def change_directory(self, directory):
         os.system("cd " + directory)

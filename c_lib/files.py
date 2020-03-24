@@ -46,10 +46,6 @@ class File(object):
 
     """ 
         Writes the content of self.output to the file
-
-        TODO when the file had error output at the very end, it is possible
-    for the writer to miss the end, might need to clear the whole file before 
-    writing again
     """  
     def write_output(self):
         self.generate_output()
@@ -57,9 +53,6 @@ class File(object):
 
     """ 
         Adds include to output
-
-        TODO include doesn't work if another include is added later on during
-    the editing process. Includes from the standard c library should be made automatically
         @param include the name fo the library to be included 
     """
     def add_std_include(self, include):
@@ -88,38 +81,37 @@ class File(object):
     """ 
         Add content to the body of a function
         @param action_type can be either add or modify 
-        TODO: implement remove for action type as well
         @param name can be add for adding content to a line inside a function
             or modify for change the content of an existing line inside a function
             or Variable to add a variable inside the function
             or call to add a call inside the function
-        TODO: implement if_else, for, while and switch statements
         @param line Use this parameter if a specific item at a line needs to be modified
         @param func_name this paramter can be used to change a function by its name 
     """
     def add_to_function_body(self, action_type, name= None, line= None, value= None, func_name= None):
         if func_name != None:
             self.current_function = self.function_dict.get(func_name)
+        ##if the user specificed a line
         elif line != None:
-            line = line - self.return_write_line(self.current_function)
+            line = line - self.return_action_at_line(line)
         original_body_length = self.current_function.return_num_lines()
         self.current_function.add_to_function_body(action_type, name, line, value)
-        
+
     """ 
-        Returns the next line to write to based on what has already been written in
-    to the file. When new information is needs to be added, this function is used to 
-    tell the file where to place the new information
-        @param element this parameter can be used to specify a function and the line 
-            to write to where the new information is directly below the element
-    """
-    def return_write_line(self, element= None):
+        Return the function that contains the given line. 
+        @param line The line requested by the user. 
+    """ 
+    def return_action_at_line(self, line):
+        current_line = 0
+        last_line = 0
         if self.tracker:
-            ret = 0
             for token in self.tracker:
-                if(element == token):
-                    return ret
-                ret += token.return_num_lines() +1
-            return ret
-        else:
-            return 1
+                # adds one to compensate for the empty line between functions
+                current_line = current_line + token.return_num_lines() + 1
+                if line <= current_line and line >= last_line:
+                    self.current_function = token
+                    return last_line
+                last_line = current_line
+                
+            
     

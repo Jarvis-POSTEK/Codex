@@ -68,7 +68,7 @@ class Writer(object):
                 token = output[iterator - 1]
                 iterator += 1
             else:
-                token = token.strip()
+                token = ""
             print(token)
         fileinput.close()
         f.close()

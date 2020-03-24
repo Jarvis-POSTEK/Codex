@@ -87,12 +87,10 @@ class CommandCentral(object):
     """ 
         Add content to the body of a function
         @param action_type can be either add or modify 
-        TODO: implement remove for action type as well
         @param name can be add for adding content to a line inside a function
             or modify for change the content of an existing line inside a function
             or Variable to add a variable inside the function
             or call to add a call inside the function
-        TODO: implement if_else, for, while and switch statements
         @param line Use this parameter if a specific item at a line needs to be modified
         @param func_name this paramter can be used to change a function by its name 
     """

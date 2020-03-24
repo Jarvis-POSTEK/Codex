@@ -12,8 +12,7 @@ from .import variable
     Initialization of the Calls class
 
     @instance variable_list a dictionary containing all the variables that this function
-    TODO implement self checking for parameter type
-    TODO might need to differentiate between calls to user defined function and standard functions
+
     @instance name name of the call(e.g. for printf() the name would be jus printf)
 """
 class Calls(object):

@@ -27,7 +27,6 @@ class Variable(object):
 
         @param action when function calls this class the parameter was called
             name, will change in the future
-        TODO stop being stuipd
         @param value the value that the user wish to assign to the variable
     """  
     def handle_command(self, action, value):
@@ -59,7 +58,7 @@ class Variable(object):
             temp_out += " = " + self.value
         else:
             temp_out += ";"
-        output.insert(1,temp_out)
+        output.append(temp_out)
 
     """ 
         Returns how many lines this class is taking up, which for variables
