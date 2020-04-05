@@ -1,5 +1,5 @@
 """
-    Author:Nicolas Stefanelli and Jarvis Lu
+    Author:Nicolas Stefanelli, Jarvis Lu, and Rylee Bers
     Date: 3/17/2020
 
     This file contains the IfElse class. This class can be used to implement 
@@ -129,75 +129,89 @@ class Else(loops_and_conditionals_parent):
         super().__init__()
 
     def generate_output(self,output,indent_level):
-        output = ""
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "else{"
+        temp_out += "else{"
         for token in self.argument_list:
-            output += token + " "
-        output += "}"
+            temp_out += token + " "
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
 
-        return output
+
 
 class While(loops_and_conditionals_parent):
-    def __init__(self):
+    def __init(self):
         super().__init__()
     
     def generate_output(self,output,indent_level):
-        output = ""
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "while("
+        temp_out += "while("
         for token in self.argument_list:
-            output += token + " "
-        output += "){"
-        
-        return output
+            temp_out += token + " "
+        temp_out += "){"
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
+
 
 class For(loops_and_conditionals_parent):
     def __init__(self):
         super().__init__()
 
     def generate_output(self,output,indent_level):
-        output = ""
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "for("
+        temp_out += "for("
         for token in self.argument_list:
-            # The ";" would have to be included in argument_list between the 3 parts the way this is set up
-            output += token + " "
-        output += "){"
+            temp_out += token + ";"          # The way this is set up, the initialization, update,
+        temp_out += "){"                     # and terminate parts of a for loop are all considered 
+        output.append(indent + temp_out)     # separate tokens. Might need to change this 
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
 
-        return output
 
+class Do_while(While):
+    def __init__(self):
+        super().__init__()
 
-    class Do_while(While):
-        def __init__(self):
-            super().__init__()
+    def generate_output(self,output,indent_level,):
+        temp_out = ""
+        indent = ""
+        count_indents = 0
+        while(count_indents < indent_level):
+            indent += "\t"
+            count_indents += 1
+        temp_out += "do{"
+        for token in self.argument_list:
+            temp_out += token + " "
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
 
-        def generate_output(self,output,indent_level):
-            output = ""
-            count_indents = 0
-            while(count_indents < indent_level):
-                output += "\t"
-                count_indents += 1
-            output += "do{"
-            for token in self.argument_list:
-                output += token + " "
-            output += "}"
+        # While's generate output is called
+        # may need to change syntax of this later, because I'm not sure if
+        # argument_list will still contain the arguments for the do section when while's method uses it
+        output.append(super().generate_output())
+        output = output[:-2] # remove the un-needed "{ and } from While's generate output method"
 
-            # argument_list only contains the arguments for the "do" part until 
-            # While's generate output is called
-            output += (While.__init__(self)).generate_output(self,output,indent_level)
-            output = output[:-1] # remove the un-needed "{"
-
-            return output
     
     
 
