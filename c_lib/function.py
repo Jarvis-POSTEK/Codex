@@ -62,6 +62,7 @@ class Function_definition(object):
         self.output.append("}")
         for token in self.output:
             output.append(token)
+        return output
 
     """ 
         Return just the output generated since function declaration have
@@ -69,7 +70,7 @@ class Function_definition(object):
         @return just the function header (e.g. int example ();)
     """ 
     def return_func_declaration(self):
-        return self.generate_output() + ";"
+        return self.generate_output(self) + ";"
 
     """ 
         return the output with the format for a function body
@@ -80,7 +81,7 @@ class Function_definition(object):
             its information 
     """ 
     def return_func_definition(self, output, starting_index):
-        temp_output = self.generate_output()
+        temp_output = self.generate_output(self)
         while(len(output) <= starting_index):
             output.append("")
         output.insert(starting_index, (temp_output + "{"))
@@ -117,6 +118,16 @@ class Function_definition(object):
         if line != None:
             line = line - self.return_action_at_line(line)
         if isinstance(self.current_action, type(loops_and_conditionals.If())):
+            self.current_action.add_to_body(action_type, name, line, value)
+        elif isinstance(self.current_action, type(loops_and_conditionals.Elif())):
+            self.current_action.add_to_body(action_type, name, line, value)
+        elif isinstance(self.current_action, type(loops_and_conditionals.Else())):
+            self.current_action.add_to_body(action_type, name, line, value)
+        elif isinstance(self.current_action, type(loops_and_conditionals.While())):
+            self.current_action.add_to_body(action_type, name, line, value)
+        elif isinstance(self.current_action, type(loops_and_conditionals.For())):
+            self.current_action.add_to_body(action_type, name, line, value)
+        elif isinstance(self.current_action, type(loops_and_conditionals.Do_while())):
             self.current_action.add_to_body(action_type, name, line, value)
         else: 
             if action_type == "add":
@@ -160,5 +171,15 @@ class Function_definition(object):
             self.variable_dict.update({value:self.current_action})
         elif name == "if":
             self.current_action = loops_and_conditionals.If()
+        elif name == "elif":
+            self.current_action = loops_and_conditionals.Elif()
+        elif name == "else":
+            self.current_action = loops_and_conditionals.Else()
+        elif name == "while":
+            self.current_action = loops_and_conditionals.While()
+        elif name == "for":
+            self.current_action = loops_and_conditionals.For()
+        elif name == "do while":
+            self.current_action = loops_and_conditionals.Do_while()
         self.current_action.name = value
         self.tracker.append(self.current_action)

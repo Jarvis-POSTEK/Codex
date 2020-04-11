@@ -70,7 +70,6 @@ command.add_to_func_body("modify", "add", line= 11, value="yes")
 # time.sleep(1)
 command.add_to_func_body("add", "if")
 command.add_to_func_body("add", "else")
-command.add_to_func_body("add", "call", value ="else")
 command.add_to_func_body("add", "while")
 command.add_to_func_body("add", "for")
 
