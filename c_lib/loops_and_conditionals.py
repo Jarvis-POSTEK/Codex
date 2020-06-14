@@ -1,3 +1,5 @@
+from . import calls
+
 """
     Author:Nicolas Stefanelli and Jarvis Lu
     Date: 3/17/2020
@@ -52,7 +54,7 @@ class loops_and_conditionals_parent:
     def add_to_body(self, action_type, name= None, line= None, value= None):
         if line != None:
             line = line - self.return_action_at_line(line)
-        if isinstance(self.current_action, type(If())):
+        if isinstance(self.current_action, loops_and_conditionals_parent):
             self.current_action.add_to_body(action_type, name, line, value)
         else: 
             if action_type == "add":
@@ -75,18 +77,29 @@ class loops_and_conditionals_parent:
     """ 
     def set_current_action(self, name, value):
         if name == "call":
-            self.current_action = calls.Calls()
+            self.current_action = calls.Calls(self)
         elif name == "variable":
-            self.current_action = variable.Variable()
+            self.current_action = variable.Variable(self)
             self.variable_dict.update({value:self.current_action})
         elif name == "if":
-            self.current_action = If()
+            self.current_action = If(self)
+        elif name == "elif":
+            self.current_action = Elif(self)
+        elif name == "else":
+            self.current_action = Else(self)
+        elif name == "while":
+            self.current_action = While(self)
+        elif name == "for":
+            self.current_action = For(self)
+        elif name == "do_while":
+            self.current_action = Do_while(self)      
         self.current_action.name = value
         self.tracker.append(self.current_action)
 
 class If(loops_and_conditionals_parent):
-    def __init__(self):
+    def __init__(self, master):
         super().__init__()
+        self.previous = master
 
     def generate_output(self,output,indent_level):
         temp_out = ""
@@ -106,8 +119,9 @@ class If(loops_and_conditionals_parent):
         
 
 class Elif(loops_and_conditionals_parent):
-    def __init__(self):
+    def __init__(self, master):
         super().__init__()
+        self.previous = master
     
     def generate_output(self,output,indent_level):
         temp_out = ""
@@ -121,83 +135,93 @@ class Elif(loops_and_conditionals_parent):
             temp_out += token + " "
         temp_out += "){"
         output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
         output.append(indent + "}")
     
 
 class Else(loops_and_conditionals_parent):
-    def __init__(self):
+    def __init__(self, master):
         super().__init__()
+        self.previous = master
 
-    def generate_output(self,output,indent_level):
-        output = ""
+    def generate_output(self, output, indent_level):
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "else{"
-        for token in self.argument_list:
-            output += token + " "
-        output += "}"
+        temp_out += "else{"
+        temp_out += "{"
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
 
-        return output
 
 class While(loops_and_conditionals_parent):
-    def __init__(self):
+    def __init__(self, master):
         super().__init__()
+        self.previous = master
     
     def generate_output(self,output,indent_level):
-        output = ""
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "while("
+        temp_out += "while("
         for token in self.argument_list:
-            output += token + " "
-        output += "){"
-        
-        return output
+            temp_out += token + " "
+        temp_out += "){"
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
 
 class For(loops_and_conditionals_parent):
-    def __init__(self):
+    def __init__(self, master):
         super().__init__()
+        self.previous = master
 
     def generate_output(self,output,indent_level):
-        output = ""
+        temp_out = ""
+        indent = ""
         count_indents = 0
         while(count_indents < indent_level):
-            output += "\t"
+            indent += "\t"
             count_indents += 1
-        output += "for("
+        temp_out += "for("
         for token in self.argument_list:
-            # The ";" would have to be included in argument_list between the 3 parts the way this is set up
-            output += token + " "
-        output += "){"
+            temp_out += token + " "
+        temp_out += "){"
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        output.append(indent + "}")
 
-        return output
+class Do_while(loops_and_conditionals_parent):
+    def __init__(self, master):
+        super().__init__()
+        self.previous = master
 
-
-    class Do_while(While):
-        def __init__(self):
-            super().__init__()
-
-        def generate_output(self,output,indent_level):
-            output = ""
-            count_indents = 0
-            while(count_indents < indent_level):
-                output += "\t"
-                count_indents += 1
-            output += "do{"
-            for token in self.argument_list:
-                output += token + " "
-            output += "}"
-
-            # argument_list only contains the arguments for the "do" part until 
-            # While's generate output is called
-            output += (While.__init__(self)).generate_output(self,output,indent_level)
-            output = output[:-1] # remove the un-needed "{"
-
-            return output
+    def generate_output(self,output,indent_level):
+        temp_out = ""
+        indent = ""
+        count_indents = 0
+        while(count_indents < indent_level):
+            indent += "\t"
+            count_indents += 1
+        temp_out += "do{"
+        output.append(indent + temp_out)
+        for token in self.tracker:
+            token.generate_output(output, indent_level + 1)
+        temp_out = ""
+        for token in self.argument_list:
+            temp_out += token + " "
+        output.append(indent + "}while(" + temp_out + ");")
     
     
 

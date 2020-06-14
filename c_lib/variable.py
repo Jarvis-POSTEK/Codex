@@ -15,10 +15,11 @@ within a function
     @instance value the value that this variable will hold, doesn't need to be specified
 """
 class Variable(object):
-    def __init__(self):
+    def __init__(self, master):
         self.type = "void "
         self.name = None
         self.value = None
+        self.previous = master
 
     """ 
         handles the command passed in by the file. All subclass have a function

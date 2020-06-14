@@ -16,9 +16,10 @@ from .import variable
     @instance name name of the call(e.g. for printf() the name would be jus printf)
 """
 class Calls(object):
-    def __init__(self):
+    def __init__(self, master):
         self.variable_list = []
         self.name = None
+        self.previous = master
 
     """ 
         handles the command passed in by the file. All subclass have a function

@@ -116,7 +116,7 @@ class Function_definition(object):
     def add_to_function_body(self, action_type, name= None, line= None, value= None):
         if line != None:
             line = line - self.return_action_at_line(line)
-        if isinstance(self.current_action, type(loops_and_conditionals.If())):
+        if isinstance(self.current_action, loops_and_conditionals.loops_and_conditionals_parent):
             self.current_action.add_to_body(action_type, name, line, value)
         else: 
             if action_type == "add":
@@ -154,11 +154,21 @@ class Function_definition(object):
     """ 
     def set_current_action(self, name, value):
         if name == "call":
-            self.current_action = calls.Calls()
+            self.current_action = calls.Calls(self)
         elif name == "variable":
-            self.current_action = variable.Variable()
+            self.current_action = variable.Variable(self)
             self.variable_dict.update({value:self.current_action})
         elif name == "if":
-            self.current_action = loops_and_conditionals.If()
+            self.current_action = loops_and_conditionals.If(self)
+        elif name == "elif":
+            self.current_action = loops_and_conditionals.Elif(self)
+        elif name == "else":
+            self.current_action = loops_and_conditionals.Else(self)
+        elif name == "while":
+            self.current_action = loops_and_conditionals.While(self)
+        elif name == "for":
+            self.current_action = loops_and_conditionals.For(self)
+        elif name == "do_while":
+            self.current_action = loops_and_conditionals.do_while(self)      
         self.current_action.name = value
         self.tracker.append(self.current_action)
