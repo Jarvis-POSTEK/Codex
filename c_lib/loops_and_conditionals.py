@@ -1,7 +1,7 @@
 from . import calls
 
 """
-    Author:Nicolas Stefanelli and Jarvis Lu
+    Author:Nicolas Stefanelli, Jarvis Lu, and Rylee Bers
     Date: 3/17/2020
 
     This file contains the IfElse class. This class can be used to implement 
@@ -49,7 +49,7 @@ class loops_and_conditionals_parent:
             or Variable to add a variable inside the function
             or call to add a call inside the function
         @param line Use this parameter if a specific item at a line needs to be modified
-        @param func_name this paramter can be used to change a function by its name 
+        @param value this paramter can be used to change a function by its name 
     """      
     def add_to_body(self, action_type, name= None, line= None, value= None):
         if line != None:
@@ -65,7 +65,7 @@ class loops_and_conditionals_parent:
                 else:
                     self.current_action.handle_command(name, value)
             elif action_type == "remove":
-                self.tracker.remove(self.current_action)   
+                self.current_action.previous.tracker.remove(self.current_action)   
 
     """ 
         This function can be used to add classes such as the calls class or
@@ -153,12 +153,10 @@ class Else(loops_and_conditionals_parent):
             indent += "\t"
             count_indents += 1
         temp_out += "else{"
-        temp_out += "{"
         output.append(indent + temp_out)
         for token in self.tracker:
             token.generate_output(output, indent_level + 1)
         output.append(indent + "}")
-
 
 class While(loops_and_conditionals_parent):
     def __init__(self, master):

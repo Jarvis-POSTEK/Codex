@@ -62,6 +62,7 @@ class Function_definition(object):
         self.output.append("}")
         for token in self.output:
             output.append(token)
+        return output
 
     """ 
         Return just the output generated since function declaration have
@@ -69,7 +70,7 @@ class Function_definition(object):
         @return just the function header (e.g. int example ();)
     """ 
     def return_func_declaration(self):
-        return self.generate_output() + ";"
+        return self.generate_output(self) + ";"
 
     """ 
         return the output with the format for a function body
@@ -80,7 +81,7 @@ class Function_definition(object):
             its information 
     """ 
     def return_func_definition(self, output, starting_index):
-        temp_output = self.generate_output()
+        temp_output = self.generate_output(self)
         while(len(output) <= starting_index):
             output.append("")
         output.insert(starting_index, (temp_output + "{"))
