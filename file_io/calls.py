@@ -30,11 +30,11 @@ class Calls(object):
             name, will change in the future
         @param value the value that the user wish to assign to the variable
     """  
-    def handle_command(self, command_block):
-        if command_block.name == "add":
-            self.variable_list.append(str(command_block.value))
-        elif command_block.name == "delete":
-            self.variable_list.remove(command_block.value)
+    def handle_command(self, name, value):
+        if name == "add":
+            self.variable_list.append(str(value))
+        elif name == "delete":
+            self.variable_list.remove(value)
 
     """ 
         Generate the output base on the content within this variable. All subclass have a function

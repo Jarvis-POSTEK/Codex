@@ -11,7 +11,7 @@ This will serve as a bridge between voice recoginizer and the file_i/o
 
 from .import proj_manage
 from file_io import writer
-from c_lib import files
+from file_io import files
 from os.path import expanduser
 import time
 
@@ -86,15 +86,10 @@ class CommandCentral(object):
         
     """ 
         Add content to the body of a function
-        @param action_type can be either add or modify 
-        @param name can be add for adding content to a line inside a function
-            or modify for change the content of an existing line inside a function
-            or Variable to add a variable inside the function
-            or call to add a call inside the function
-        @param line Use this parameter if a specific item at a line needs to be modified
-        @param func_name this paramter can be used to change a function by its name 
+        @param CommandBlock An instance of the CommandBlock class. This class
+            is then used to pass information down the line
     """
-    def add_to_func_body(self, action_type, name= None, line= None, value= None, func_name= None):
-        self.current_file.add_to_function_body(action_type, name, line, value, func_name)
+    def add_to_func_body(self, command_block):
+        self.current_file.add_to_function_body(command_block)
         self.current_file.write_output()
 

@@ -30,14 +30,14 @@ class Variable(object):
             name, will change in the future
         @param value the value that the user wish to assign to the variable
     """  
-    def handle_command(self, action, value):
-        value = str(value)
-        if action == "add":
-            self.name = value
-        elif action == "type":
-            self.type = value + " "
-        elif action == "value":
-            self.value = value + ";"
+    def handle_command(self,command_block):
+        command_block.value = str(command_block.value)
+        if command_block.action == "add":
+            self.name = command_block.value
+        elif command_block.action == "type":
+            self.type = command_block.value + " "
+        elif command_block.action == "value":
+            self.value = command_block.value + ";"
         
     """ 
         Generate the output base on the content within this variable. All subclass have a function

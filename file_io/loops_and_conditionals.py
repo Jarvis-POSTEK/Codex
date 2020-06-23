@@ -51,20 +51,20 @@ class loops_and_conditionals_parent:
         @param line Use this parameter if a specific item at a line needs to be modified
         @param value this paramter can be used to change a function by its name 
     """      
-    def add_to_body(self, command_block):
-        if command_block.line != None:
-            command_block.line = command_block.line - self.return_action_at_line(command_block.line)
+    def add_to_body(self, action_type, name= None, line= None, value= None):
+        if line != None:
+            line = line - self.return_action_at_line(line)
         if isinstance(self.current_action, loops_and_conditionals_parent):
-            self.current_action.add_to_body(command_block)
+            self.current_action.add_to_body(action_type, name, line, value)
         else: 
-            if command_block.action_type == "add":
-                self.set_current_action(command_block)
-            elif command_block.action_type == "modify":
-                if self.variable_dict.get(command_block.value) != None:
-                    self.current_action.handle_command(command_block)
+            if action_type == "add":
+                self.set_current_action(name, value)
+            elif action_type == "modify":
+                if self.variable_dict.get(value) != None:
+                    self.current_action.handle_command(name, self.variable_dict.get(value).name)
                 else:
-                    self.current_action.handle_command(command_block)
-            elif command_block.action_type == "remove":
+                    self.current_action.handle_command(name, value)
+            elif action_type == "remove":
                 self.previous.tracker.remove(self)
                 # self.previous.current_action = self.current_action
 
@@ -76,25 +76,25 @@ class loops_and_conditionals_parent:
         @param value in this case would be the name that you wish to give to the
             class 
     """ 
-    def set_current_action(self, command_block):
-        if command_block.name == "call":
+    def set_current_action(self, name, value):
+        if name == "call":
             self.current_action = calls.Calls(self)
-        elif command_block.name == "variable":
+        elif name == "variable":
             self.current_action = variable.Variable(self)
-            self.variable_dict.update({command_block.value:self.current_action})
-        elif command_block.name == "if":
+            self.variable_dict.update({value:self.current_action})
+        elif name == "if":
             self.current_action = If(self)
-        elif command_block.name == "elif":
+        elif name == "elif":
             self.current_action = Elif(self)
-        elif command_block.name == "else":
+        elif name == "else":
             self.current_action = Else(self)
-        elif command_block.name == "while":
+        elif name == "while":
             self.current_action = While(self)
-        elif command_block.name == "for":
+        elif name == "for":
             self.current_action = For(self)
-        elif command_block.name == "do_while":
+        elif name == "do_while":
             self.current_action = Do_while(self)      
-        self.current_action.name = command_block.value
+        self.current_action.name = value
         self.tracker.append(self.current_action)
 
 class If(loops_and_conditionals_parent):

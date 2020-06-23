@@ -113,20 +113,20 @@ class Function_definition(object):
         @param line Use this parameter if a specific item at a line needs to be modified
         @param func_name this paramter can be used to change a function by its name 
     """
-    def add_to_function_body(self, command_block):
-        if command_block.line != None:
-            command_block.line = command_block.line - self.return_action_at_line(command_block.line)
+    def add_to_function_body(self, action_type, name= None, line= None, value= None):
+        if line != None:
+            line = line - self.return_action_at_line(line)
         if isinstance(self.current_action, loops_and_conditionals.loops_and_conditionals_parent):
-            self.current_action.add_to_body(command_block)
+            self.current_action.add_to_body(action_type, name, line, value)
         else: 
-            if command_block.action_type == "add":
-                self.set_current_action(command_block)
-            elif command_block.action_type == "modify":
-                if self.variable_dict.get(command_block.value) != None:
-                    self.current_action.handle_command(command_block.name, self.variable_dict.get(command_block.value).name)
+            if action_type == "add":
+                self.set_current_action(name, value)
+            elif action_type == "modify":
+                if self.variable_dict.get(value) != None:
+                    self.current_action.handle_command(name, self.variable_dict.get(value).name)
                 else:
-                    self.current_action.handle_command(command_block.name, command_block.value)
-            elif command_block.action_type == "remove":
+                    self.current_action.handle_command(name, value)
+            elif action_type == "remove":
                 self.tracker.remove(self.current_action)
 
     """ 
@@ -152,23 +152,23 @@ class Function_definition(object):
         @param value in this case would be the name that you wish to give to the
             class 
     """ 
-    def set_current_action(self, command_block):
-        if command_block.names == "call":
+    def set_current_action(self, names, values):
+        if names == "call":
             self.current_action = calls.Calls(self)
-        elif command_block.names == "variable":
+        elif names == "variable":
             self.current_action = variable.Variable(self)
-            self.variable_dict.update({command_block.values:self.current_action})
-        elif command_block.names == "if":
+            self.variable_dict.update({values:self.current_action})
+        elif names == "if":
             self.current_action = loops_and_conditionals.If(self)
-        elif command_block.names == "elif":
+        elif names == "elif":
             self.current_action = loops_and_conditionals.Elif(self)
-        elif command_block.names == "else":
+        elif names == "else":
             self.current_action = loops_and_conditionals.Else(self)
-        elif command_block.names == "while":
+        elif names == "while":
             self.current_action = loops_and_conditionals.While(self)
-        elif command_block.names == "for":
+        elif names == "for":
             self.current_action = loops_and_conditionals.For(self)
-        elif command_block.names == "do_while":
+        elif names == "do_while":
             self.current_action = loops_and_conditionals.Do_while(self)      
-        self.current_action.name = command_block.values
+        self.current_action.name = values
         self.tracker.append(self.current_action)

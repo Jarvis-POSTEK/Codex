@@ -44,7 +44,6 @@ class File(object):
             token.generate_output(self.output)
             self.output.append("")
 
-
     """ 
         Writes the content of self.output to the file
     """  
@@ -89,13 +88,14 @@ class File(object):
         @param line Use this parameter if a specific item at a line needs to be modified
         @param func_name this paramter can be used to change a function by its name 
     """
-    def add_to_function_body(self, command_block):
-        if command_block.func_name != None:
-            self.current_function = self.function_dict.get(command_block.func_name)
+    def add_to_function_body(self, action_type, name= None, line= None, value= None, func_name= None):
+        if func_name != None:
+            self.current_function = self.function_dict.get(func_name)
         ##if the user specificed a line
-        elif command_block.line != None:
-            command_block.line = command_block.line - self.return_action_at_line(command_block.line)
-        self.current_function.add_to_function_body(command_block)
+        elif line != None:
+            line = line - self.return_action_at_line(line)
+        original_body_length = self.current_function.return_num_lines()
+        self.current_function.add_to_function_body(action_type, name, line, value)
 
     """ 
         Return the function that contains the given line. 

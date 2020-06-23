@@ -7,7 +7,7 @@ keeping track of files and current working directory of the project
 
 """
 from .import navigation
-from c_lib import files
+from file_io import files
 import pyautogui
 import os
 from os.path import expanduser
