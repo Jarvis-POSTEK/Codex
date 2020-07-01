@@ -16,16 +16,26 @@ that needs to be passed down to individual functions and sub-classes for actions
     @instance value the value that this variable will hold, doesn't need to be specified
 """
 class CommandBlock(object):
-    def __init__(self, action= None, name= None, line= None, value= None, func_name= None):
+    def __init__(self, action = None, type = None, name = None, line = None, column = None, 
+    value = None, func_name = None):
         self.action = action
+        self.type = type
         self.name = name
         self.line = line
+        self.column = column
         self.value = value
         self.func_name = func_name
 
-    def modify_info(self, action= None, name= None, line= None, value= None, func_name= None):
+    def modify_info(self, action = None, type = None, name = None, line = None, column = None, 
+    value = None, func_name = None):
         self.action = action
+        self.type = type
         self.name = name
         self.line = line
+        self.column = column
         self.value = value
         self.func_name = func_name
+
+# I added type and column number to each of these functions. Feel free to remove
+# This is Rylee btw :)
+
