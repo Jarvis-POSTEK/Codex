@@ -114,6 +114,7 @@ class Function_definition(object):
         @param func_name this paramter can be used to change a function by its name 
     """
     def add_to_function_body(self, command_block):
+        print("functions")
         if command_block.line != None:
             command_block.line = command_block.line - self.return_action_at_line(command_block.line)
         if isinstance(self.current_action, loops_and_conditionals.loops_and_conditionals_parent):

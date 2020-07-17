@@ -90,6 +90,8 @@ class File(object):
         @param func_name this paramter can be used to change a function by its name 
     """
     def add_to_function_body(self, command_block):
+        print("here")
+        print("wut")
         if command_block.func_name != None:
             self.current_function = self.function_dict.get(command_block.func_name)
         ##if the user specificed a line
