@@ -18,8 +18,10 @@ that needs to be passed down to individual functions and sub-classes for actions
 class CommandBlock(object):
     def __init__(self, action= None, name= None, line= None, value= None, func_name= None, action_type = None):
         self.action = action
+        self.type = type
         self.name = name
         self.line = line
+        self.column = column
         self.value = value
         self.func_name = func_name
         self.action_type = action_type
@@ -34,7 +36,13 @@ class CommandBlock(object):
     """
     def modify_info(self, action= None, name= None, line= None, value= None, func_name= None, action_type = None):
         self.action = action
+        self.type = type
         self.name = name
         self.line = line
+        self.column = column
         self.value = value
         self.func_name = func_name
+
+# I added type and column number to each of these functions. Feel free to remove
+# This is Rylee btw :)
+
