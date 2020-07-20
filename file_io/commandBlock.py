@@ -21,7 +21,6 @@ class CommandBlock(object):
         self.type = type
         self.name = name
         self.line = line
-        self.column = column
         self.value = value
         self.func_name = func_name
         self.action_type = action_type
@@ -39,10 +38,8 @@ class CommandBlock(object):
         self.type = type
         self.name = name
         self.line = line
-        self.column = column
         self.value = value
         self.func_name = func_name
 
-# I added type and column number to each of these functions. Feel free to remove
-# This is Rylee btw :)
+
 

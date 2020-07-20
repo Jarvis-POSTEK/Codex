@@ -1,6 +1,6 @@
 """
     Author: Rylee Bers
-    Last modified: 7/12/2020
+    Last modified: 7/19/2020
 
     This file contains the listen class. It's purpose is to listen for a command from the user,
     then convert the command in a CommandBlock object
@@ -18,18 +18,13 @@ import pocketsphinx
 
 
 
-#some thoughts for future edits of commandBlock class and this class:
 
 #In the future, I think these two classes should take into account the user wanting 
 #to add non variable or function things such as "|, &, ==, ect..."
-#I also think that the commandBlock paramters such as "type" and "name" should also be associated with
-#functions too, since the user will probably create their own function eventually and need to give it
-#a return type and name
 
 
 
-
-class listen:
+class listen(object):
     def __init__(self):
         #directory to find potential parameters for commandBlock
 
@@ -40,18 +35,21 @@ class listen:
 
 
         #directory of user actions
-        self.actiondict = {"add function"         : "add",
-                           "add variable"         : "add",
+        #most keys associated with a codex function
+        self.actiondict = {"add function"         : "add_to_func_body",       #jarvis I'm not familiar with your codex functions so feel free to change the values associated with the keys
+                           "add new function"     : "add_func",               #TODO - figure out how to pull out "declaration" or "definition" parameter
+                           "add variable"         : "add_to_func_body",       #TODO - add add_include to the action list and add_file
+                           "add new variable"     : "add_to_func_body",
+                           "add"                  : "add_to_func_body",
                            "remove"               : "delete",
                            "delete"               : "delete",
-                           "get rid of"           : "delete",
+                           "get rid of"           : "delete",  #change to whatever codex function deletes
                            "take away"            : "delete",
                            "change"               : "modify",
-                           "modify"               : "modify",
+                           "modify"               : "modify",  #change to whatever codex function modifies
                            "adjust"               : "modify",
                            "undo"                 : "undo",
                            "exit"                 : "exit"
-            #more to come... maybe add #include or a create new function action, or add parameters to function
                            }
 
 
@@ -99,6 +97,7 @@ class listen:
 
     """
         When the user creates a new function, it can be added to the directory of existing c functions
+        Might delete later
 
         @instance function the function the user created
         @instance funcname the name of the function that will be linked with the function (the key in the directory)

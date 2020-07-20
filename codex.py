@@ -12,6 +12,38 @@ import time
 import fileinput
 import platform
 
+
+#lines 18 - 39 Rylee Bers
+
+loop = 1
+command = command_central.CommandCentral(platform.system())
+audio = listen()
+
+while loop == 1:
+    userCommand = audio.listenToUser()
+
+    if userCommand.action == "exit":
+        loop = 0
+
+    elif userCommand.action == "add_func":
+        #pulling out the appropriate parameters from userCommand to add_func
+        command.add_func(userCommand.name, userCommand.type, "declaration") #I'll figure out how to extract third paramter in listen class another time....
+    
+    elif userCommand.action == "add_to_func_body":
+        pass
+
+    #more elif statements.... hopefully you get the idea by now
+
+
+    #so basically a bunch of if statements for each action so that the commandBlock parameters go into the
+    #correct codex functions. Is there a better way to do this????
+
+
+
+
+
+
+
 command = command_central.CommandCentral(platform.system())
 #disable can be passed in to not add Onedrive if not desired
 command.create_new_project(["Desktop", "test2","disable"])
@@ -26,6 +58,8 @@ command.create_new_project(["Desktop", "test2","disable"])
 #         command.create_new_project(home + "\\OneDrive\\Desktop\\test")
 #     else:
 #         command.create_new_project(home + "\\Desktop\\test")
+
+
 
 command.add_file("hello_world.c")
 command.add_include("stdio.h")
