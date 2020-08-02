@@ -14,7 +14,7 @@ class listen(object):
 
     @instance wordbank the list of words that can be converted to commands
     """
-    def __init__(self, wordbank):
+    def __init__(self):
         self.wordbank = ['add', 'modify', 'delete', 'undo']
 
 
@@ -59,11 +59,44 @@ class listen(object):
     """
     Helper function for function that will autocorrect if a word is a certain percentage match of a word from wordbank
 
-    @instance correct number of characters that match word
-    @instance numletters the total number of characters in the word that is being analyzed
+    @testedword the word the user has typed
+    @potentialword the word we are determining if there is a match or not
+    @instance numletters the total number of characters in testedword(we use length of word to avoid outofbounds error)
     """
-    def percentage(self, correct, numletters):
-        pass
+    def percentage(self, testedword, potentialword, numletters):
+        correct = 0
+        for n in range(numletters):
+            if testedword(n) == potentialword(n):
+                correct += 1
+
+        return correct/numletters
+
+
+
+
+
+    """
+    If autofill could not find a match, autocorrect chooses a word based on the user's fully typed command
+
+    @instance letters the text the user has typed that needs to be matched with a word
+    """
+    def autocorrect(self, letters):
+        maxpercentword = ""
+        maxpercent = 0
+        for word in self.wordbank:
+            percentmatch = percentage(letters, word, len(word))
+            if percentmatch > maxpercent:
+                maxpercent = percentmatch
+                maxpercentword = word
+
+        return maxpercentword
+
+
+
+
+
+
+
 
     
 
