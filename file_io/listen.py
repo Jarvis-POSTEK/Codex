@@ -8,14 +8,14 @@
 
 import copy
 
-class listen(object):
+class Listen(object):
     """
     Initialization of listen class
 
     @instance wordbank the list of words that can be converted to commands
     """
     def __init__(self):
-        self.wordbank = ['add', 'modify', 'delete', 'undo']
+        self.wordbank = ['add', 'delete', 'undo','modify']
 
 
 
@@ -28,15 +28,20 @@ class listen(object):
     """
     def autofill(self, letters):
         potentialwords = self.wordbank.copy()
+        wrong_words = []
 
         #Check potential word letter by letter. If there is any irregularity remove the word from potential
         #list and move on to next word
         for word in potentialwords:
             for c in range(len(letters)):
                 if letters[c] != word[c]:
-                    del word
+                    wrong_words.append(word)
                     break
-
+        
+        for words in wrong_words:
+            potentialwords.remove(words)
+        wrong_words.clear()
+        
         #return word if there is only one choice left
         if len(potentialwords) == 1:
             return potentialwords[0]
