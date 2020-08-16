@@ -26,7 +26,7 @@ class Listen(object):
 
     @instance letters the substring of the word the user has typed so far
     """
-    def autofill(self, letters):
+    def auto_fill(self, letters):
         potentialwords = self.wordbank.copy()
         wrong_words = []
 
@@ -66,15 +66,18 @@ class Listen(object):
 
     @testedword the word the user has typed
     @potentialword the word we are determining if there is a match or not
-    @instance numletters the total number of characters in testedword(we use length of word to avoid outofbounds error)
     """
-    def percentage(self, testedword, potentialword, numletters):
+    def percentage(self, testedword, potentialword):
+        looprange = len(testedword)
+        if len(potentialword) < looprange:
+            looprange = len(potentialword)
+
         correct = 0
-        for n in range(numletters):
-            if testedword(n) == potentialword(n):
+        for n in range(looprange):
+            if testedword[n] == potentialword[n]:
                 correct += 1
 
-        return correct/numletters
+        return correct/len(potentialword)
 
 
 
@@ -82,14 +85,17 @@ class Listen(object):
 
     """
     If autofill could not find a match, autocorrect chooses a word based on the user's fully typed command
+    The word that is chosen will be closest in match to the misspelled word
+    If there are two words that are both equal in percentage accuracy to the misspelled word, the first one
+    found will be chosen
 
     @instance letters the text the user has typed that needs to be matched with a word
     """
-    def autocorrect(self, letters):
+    def auto_correct(self, letters):
         maxpercentword = ""
         maxpercent = 0
         for word in self.wordbank:
-            percentmatch = percentage(letters, word, len(word))
+            percentmatch = self.percentage(letters, word)
             if percentmatch > maxpercent:
                 maxpercent = percentmatch
                 maxpercentword = word

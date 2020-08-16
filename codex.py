@@ -14,8 +14,14 @@ from os.path import expanduser
 import platform
 from file_io import listen
 
-command = command_central.CommandCentral(platform.system())
-command.create_new_project("/Desktop/test")
+# command = command_central.CommandCentral(platform.system())
+# command.create_new_project("/Desktop/test")
+
+test = listen.Listen()
+print(test.auto_correct("ab"))
+print(test.auto_correct("mudifa"))
+print(test.auto_fill("del"))
+
 # command.add_file("hello_world.c")
 
 # command.add_include("stdio.h")
