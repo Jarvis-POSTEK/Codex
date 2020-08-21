@@ -44,6 +44,7 @@ class Project(object):
         self.get_work_path(path)
 
         #creates the project directory
+        
         os.system(self.command.get("directory") + self.work_path)
         #open the directory with vs code
         open_apps.open_vscode(self.work_path)
@@ -59,8 +60,10 @@ class Project(object):
         work_path = expanduser("~")
         if os.path.exists(work_path + self.command.get("slash") + "Onedrive") and path.count("disable") == 0:
             work_path = work_path + self.command.get("slash") + "Onedrive"
+        if type(path) == str:
+            path = path.split("/")
         for item in path:
-            if item != "disable":
+            if item != "disable" and item != '':
                 work_path = work_path + self.command.get("slash") + item
         self.work_path = work_path
         self.current_directory = work_path

@@ -79,10 +79,6 @@ class Listen(object):
 
         return correct/len(potentialword)
 
-
-
-
-
     """
     If autofill could not find a match, autocorrect chooses a word based on the user's fully typed command
     The word that is chosen will be closest in match to the misspelled word

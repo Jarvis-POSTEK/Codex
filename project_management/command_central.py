@@ -89,7 +89,7 @@ class CommandCentral(object):
         @param CommandBlock An instance of the CommandBlock class. This class
             is then used to pass information down the line
     """
-    def add_to_func_body(self, command_block):
-        self.current_file.add_to_function_body(command_block)
+    def add_to_func_body(self, command_line, func_name = None):
+        self.current_file.add_to_function_body(command_line, func_name)
         self.current_file.write_output()
 

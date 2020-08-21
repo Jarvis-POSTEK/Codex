@@ -1,21 +1,19 @@
 """
     Author:Jarvis Lu
     Date: 3/2/2020
-
     This file contains the Funtion class. The function class can be used write
 functions to the file. Functions will contain sub classes such as if_else statements
 or variables or includes etc
-
 """
 
 from .import variable
 from .import calls
 from .import loops_and_conditionals
 
+action_words = ["add", "modify", "remove"]
 
 """ 
     Initialization of the Function class
-
     @param file_path path to the file that this writer class is going to write to 
     @instance function_dict a dictionary to keep all functions so a specifc func can be 
         returned given a func name
@@ -74,7 +72,6 @@ class Function_definition(object):
 
     """ 
         return the output with the format for a function body
-
         @param output the output of the file passed in for this class to 
             add content
         @param starting_index the index in which the function can start adding
@@ -104,6 +101,41 @@ class Function_definition(object):
         return num_line + 2
 
     """ 
+        Parse the command line to simply the command passing process and provide 
+    information to add_to_function_body so further action can be taken
+        @param command_line the string of command pass by the user
+        @param line Use this parameter if a specific item at a line needs to be modified
+    """
+    def parse_command(self, command_line):
+        command_line = command_line.split(",")
+        for item in command_line:
+            if len(command_line) == 0:
+                    break
+            elif item in action_words:
+                one_command = [None, None, None, None]
+                print(command_line)
+                index = command_line.index(item)
+                next_index = 0
+                if len(command_line) > index + 3:
+                    for items in command_line[index + 2:]:
+                        if items in action_words:
+                            next_index = command_line[index + 2:].index(items) + 2
+                            break
+                length = next_index - index
+                if length == 0:
+                        length = len(command_line)
+                i = 0
+                while i < length: 
+                    one_command[i] = command_line[index + i]
+                    i = i + 1
+                # print(one_command)
+                if one_command[3] != None:
+                    one_command[3] = int(one_command[3])
+                self.add_to_function_body(one_command[0], name=one_command[1], value=one_command[2], line=one_command[3])
+                command_line = command_line[index + length:]
+
+
+    """ 
         Add content to the body of a function
         @param action_type can be either add or modify 
         @param name can be add for adding content to a line inside a function
@@ -113,21 +145,21 @@ class Function_definition(object):
         @param line Use this parameter if a specific item at a line needs to be modified
         @param func_name this paramter can be used to change a function by its name 
     """
-    def add_to_function_body(self, command_block):
-        print("functions")
-        if command_block.line != None:
-            command_block.line = command_block.line - self.return_action_at_line(command_block.line)
+    def add_to_function_body(self, action_type, name= None, line= None, value= None):
+        if line != None:
+            print(line)
+            line = line - self.return_action_at_line(line)
         if isinstance(self.current_action, loops_and_conditionals.loops_and_conditionals_parent):
-            self.current_action.add_to_body(command_block)
+            self.current_action.add_to_body(action_type, name, line, value)
         else: 
-            if command_block.action == "add":
-                self.set_current_action(command_block)
-            elif command_block.action == "modify":
-                if self.variable_dict.get(command_block.value) != None:
-                    self.current_action.handle_command(command_block.name, self.variable_dict.get(command_block.value).name)
+            if action_type == "add":
+                self.set_current_action(name, value)
+            elif action_type == "modify":
+                if self.variable_dict.get(value) != None:
+                    self.current_action.handle_command(name, self.variable_dict.get(value).name)
                 else:
-                    self.current_action.handle_command(command_block.name, command_block.value)
-            elif command_block.action == "remove":
+                    self.current_action.handle_command(name, value)
+            elif action_type == "remove":
                 self.tracker.remove(self.current_action)
 
     """ 
@@ -153,23 +185,23 @@ class Function_definition(object):
         @param value in this case would be the name that you wish to give to the
             class 
     """ 
-    def set_current_action(self, command_block):
-        if command_block.name == "call":
+    def set_current_action(self, names, values):
+        if names == "call":
             self.current_action = calls.Calls(self)
-        elif command_block.name == "variable":
+        elif names == "variable":
             self.current_action = variable.Variable(self)
             self.variable_dict.update({values:self.current_action})
-        elif command_block.name == "if":
+        elif names == "if":
             self.current_action = loops_and_conditionals.If(self)
-        elif command_block.name == "elif":
+        elif names == "elif":
             self.current_action = loops_and_conditionals.Elif(self)
-        elif command_block.name == "else":
+        elif names == "else":
             self.current_action = loops_and_conditionals.Else(self)
-        elif command_block.name == "while":
+        elif names == "while":
             self.current_action = loops_and_conditionals.While(self)
-        elif command_block.name == "for":
+        elif names == "for":
             self.current_action = loops_and_conditionals.For(self)
-        elif command_block.name == "do_while":
+        elif names == "do_while":
             self.current_action = loops_and_conditionals.Do_while(self)      
-        self.current_action.name = command_block.value
+        self.current_action.name = values
         self.tracker.append(self.current_action)

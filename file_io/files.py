@@ -88,14 +88,13 @@ class File(object):
         @param line Use this parameter if a specific item at a line needs to be modified
         @param func_name this paramter can be used to change a function by its name 
     """
-    def add_to_function_body(self,command_block):
-        print("here")
-        if command_block.func_name != None:
-            self.current_function = self.function_dict.get(command_block.func_name)
+    def add_to_function_body(self, command_line, func_name = None, line = None):
+        if func_name != None:
+            self.current_function = self.function_dict.get(func_name)
         ##if the user specificed a line
-        elif command_block.line != None:
-            command_block.line = command_block.line - self.return_action_at_line(command_block.line)
-        self.current_function.add_to_function_body(command_block)
+        elif line != None:
+            line = line - self.return_action_at_line(line)
+        self.current_function.parse_command(command_line)
 
     """ 
         Return the function that contains the given line. 
